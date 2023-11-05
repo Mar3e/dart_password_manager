@@ -10,10 +10,7 @@ class Encryption {
     final crypt = AesCrypt(passWord);
     crypt.setOverwriteMode(AesCryptOwMode.warn);
 
-    // crypt.encryptTextToFileSync("Top secret", "$fileName.txt.aes");
-    print(crypt.decryptTextFromFileSync("$fileName.txt.aes"));
-
-    // crypt.encryptFileSync('testFile.txt');
-    // crypt.decryptFileSync("testFile.txt.aes");
+    crypt.encryptTextToFileSync("Top secret", "./testFolder/$fileName.txt.aes");
+    // print(crypt.decryptTextFromFileSync("$fileName.txt.aes"));
   }
 }
