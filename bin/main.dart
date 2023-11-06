@@ -1,10 +1,9 @@
-import 'package:dart_password_manager/aes_encryption.dart';
-import 'package:dart_password_manager/file_managment.dart';
+import 'package:dart_password_manager/encryption.dart';
 
 void main(List<String> arguments) {
-  final fileMan = FileManagement();
-  fileMan.createFolder();
-
   final enc = Encryption();
+
+  enc.createFolder();
+
   enc.initEncryption();
 }

@@ -1,10 +1,14 @@
 import 'dart:io';
 
-class FileManagement {
+import 'package:aes_crypt_null_safe/aes_crypt_null_safe.dart';
+
+class Encryption {
+  final String passWord;
+  final String fileName = "testFileVar";
   String? homePath;
   late Directory appDirectory;
 
-  FileManagement() {
+  Encryption({this.passWord = "new Password"}) {
     homePath =
         Platform.environment['HOME'] ?? Platform.environment['USERPROFILE'];
   }
@@ -23,14 +27,11 @@ class FileManagement {
     }
   }
 
-//! this function can not create an aes file only txt files;
-//   void createFile() {
-// // Create a text file in the folder
-//     File file = File('${appDirectory.path}/my_file.txt.aes');
+  void initEncryption() {
+    final crypt = AesCrypt(passWord);
+    crypt.setOverwriteMode(AesCryptOwMode.warn);
 
-//     // Write some text to the file
-//     file.writeAsString('Hello, world!');
-
-//     print('File created successfully.');
-//   }
+    crypt.encryptTextToFileSync("Top secret", "./testFolder/$fileName.txt.aes");
+    // print(crypt.decryptTextFromFileSync("$fileName.txt.aes"));
+  }
 }
