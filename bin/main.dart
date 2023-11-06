@@ -1,9 +1,10 @@
+import 'package:args/command_runner.dart';
 import 'package:dart_password_manager/encryption.dart';
 
 void main(List<String> arguments) {
-  final enc = Encryption();
-
-  enc.createFolder();
-
-  enc.initEncryption();
+  // ignore: unused_local_variable
+  final runner = CommandRunner(
+      "dpassman", "A password manager that uses the dart language")
+    ..addCommand(Encryption())
+    ..run(arguments);
 }

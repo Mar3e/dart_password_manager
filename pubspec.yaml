@@ -9,6 +9,7 @@ environment:
 # Add regular dependencies here.
 dependencies:
   aes_crypt_null_safe: ^2.0.2
+  args: ^2.4.2
   # path: ^1.8.0
 
 dev_dependencies:
