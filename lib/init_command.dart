@@ -3,15 +3,16 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:aes_crypt_null_safe/aes_crypt_null_safe.dart';
 import 'package:args/command_runner.dart';
-import 'package:dart_password_manager/core/settings.dart';
+import 'package:dart_password_manager/aes_algorithm.dart';
 import 'package:dart_password_manager/file_manager.dart';
+import 'package:dart_password_manager/settings.dart';
 import 'package:pointycastle/api.dart';
 
 class InitCommand extends Command {
   @override
   String get name => "init";
+  final fileMan = FileManager();
 
   @override
   String get description => "initializing the password manager";
@@ -19,49 +20,44 @@ class InitCommand extends Command {
   @override
   FutureOr? run() {
     initDPassMan();
-    stdout.write("Please enter a master key to be used in encryption: ");
-    String? masterKey = stdin.readLineSync();
-    if (masterKey != null && masterKey.isNotEmpty) {
-      setMasterKey(masterKey);
-    } else {
-      throw Exception("you did not enter any thing!!");
-    }
   }
 
-  void initDPassMan() {
-    final fileMan = FileManager();
-    //* create the main folder
+  void initDPassMan() async {
     Directory appDirectory = fileMan.createDir(".dpassman");
 
     if (!appDirectory.existsSync()) {
-      appDirectory.create();
+      final masterKey = askForMasterKey();
+      await appDirectory.create();
       stdout.writeln("Folder created successfully!");
+      createSettingsFile();
+      setMasterKey(masterKey);
     } else {
       stdout.writeln('You already initialized dpassman');
     }
+  }
 
-    //* creating the settings file
+  void createSettingsFile() {
     String settingPath = ".settings.json";
     final settingFile = fileMan.createFile(settingPath);
     fileMan.writeOnFile(settingFile, writeSettings());
+  }
 
-    final settings = Settings(salt, algorithmKeySize: algorithmKeySize, pbkdf2Name: pbkdf2Name, pbkdf2Iterations: pbkdf2Iterations)
+  String askForMasterKey() {
+    stdout.write("Please enter a master key to be used in encryption: ");
+    String? masterKey = stdin.readLineSync();
+    if (masterKey != null && masterKey.isNotEmpty) {
+      return masterKey;
+    } else {
+      stdout.write("Please enter something!!");
+      exit(2);
+    }
   }
 
   void setMasterKey(String masterKey) {
-    // Convert the input string to bytes
-    Uint8List inputBytes = Uint8List.fromList(utf8.encode(masterKey));
-
-    // Create a SHA-256 hasher
-    Digest sha256 = Digest('SHA-256');
-
-    // Hash the input bytes using SHA-256
-    Uint8List hashedBytes = sha256.process(inputBytes);
-
-    // Convert the hashed bytes to a hexadecimal string
-    String hashedString = base64.encode(hashedBytes);
-
-    print('Hashed string: $hashedString');
+    final aes = AesAlgorithm();
+    String hashedMasterKey = aes.hashKey(masterKey);
+    final set = Settings();
+    set.addToSettings("masterKey", hashedMasterKey);
   }
 
   String writeSettings() {
@@ -73,7 +69,8 @@ class InitCommand extends Command {
       'algorithmKeySize': 256,
       'pbkdf2Name': 'SHA-256/HMAC/PBKDF2',
       'pbkdf2Iterations': 32767,
-      'salt': saltStr
+      'salt': saltStr,
+      'masterKey': "",
     };
     String jsonData = json.encode(settingsData);
     return jsonData;
