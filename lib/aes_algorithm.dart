@@ -3,34 +3,34 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:aes_crypt_null_safe/aes_crypt_null_safe.dart';
+import 'package:dart_password_manager/file_manager.dart';
 import 'package:dart_password_manager/settings.dart';
 import 'package:pointycastle/pointycastle.dart';
 
 class AesAlgorithm {
-  static void _encrypt({required String masterPassWord}) {
+  static void encrypt({
+    required String masterPassWord,
+    required String passwordFileName,
+    required Map<String, dynamic> passwordFileDetails,
+  }) {
     Uint8List passphrase = Uint8List.fromList(utf8.encode(masterPassWord));
-    final key = _generateKey(Settings.settings["salt"], passphrase);
+    Uint8List salt = Uint8List.fromList(utf8.encode(Settings.settings["salt"]));
+    final key = _generateKey(salt, passphrase);
     String keyAsString = base64.encode(key);
     final crypt = AesCrypt(keyAsString);
     crypt.setOverwriteMode(AesCryptOwMode.warn);
 
     try {
-      stdout.write("For what do you use this password? ");
-      String fileName = stdin.readLineSync() ?? "No_name";
-      stdout.write("Please enter your password: ");
-      String? passwordPlainText = stdin.readLineSync();
-      if (passwordPlainText != null && passwordPlainText.isNotEmpty) {
-        crypt.encryptTextToFileSync(
-            passwordPlainText, "./testFolder/$fileName.txt.aes");
-      } else {
-        stdout.write('Error: you did not enter any thing!!');
-      }
+      String fileName = passwordFileName;
+      String passwordDetailsStr = json.encode(passwordFileDetails);
+      crypt.encryptTextToFileSync(passwordDetailsStr,
+          "${FileManager.homePath}/.dpassman/$fileName.txt.aes");
     } on AesCryptException {
       print("The file is already exists");
     }
   }
 
-  static void _decrypt({required String masterPassWord}) {
+  static void decrypt({required String masterPassWord}) {
     Uint8List passphrase = Uint8List.fromList(utf8.encode(masterPassWord));
 
     Uint8List key = _generateKey(Settings.settings["salt"], passphrase);
