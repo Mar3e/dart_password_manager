@@ -1,22 +1,16 @@
-import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:aes_crypt_null_safe/aes_crypt_null_safe.dart';
-import 'package:args/command_runner.dart';
 import 'package:dart_password_manager/settings.dart';
 import 'package:pointycastle/pointycastle.dart';
 
 class AesAlgorithm {
-  void _encrypt({required String masterPassWord}) {
+  static void _encrypt({required String masterPassWord}) {
     Uint8List passphrase = Uint8List.fromList(utf8.encode(masterPassWord));
-    final set = Settings();
-
-    final key = _generateKey(set.settings["salt"], passphrase);
-    // Convert the  Uint8List to a string
+    final key = _generateKey(Settings.settings["salt"], passphrase);
     String keyAsString = base64.encode(key);
-
     final crypt = AesCrypt(keyAsString);
     crypt.setOverwriteMode(AesCryptOwMode.warn);
 
@@ -36,11 +30,10 @@ class AesAlgorithm {
     }
   }
 
-  void _decrypt({required String masterPassWord}) {
+  static void _decrypt({required String masterPassWord}) {
     Uint8List passphrase = Uint8List.fromList(utf8.encode(masterPassWord));
-    final set = Settings();
 
-    Uint8List key = _generateKey(set.settings["salt"], passphrase);
+    Uint8List key = _generateKey(Settings.settings["salt"], passphrase);
     String keyAsString = base64.encode(key);
     final crypt = AesCrypt(keyAsString);
 
@@ -53,16 +46,15 @@ class AesAlgorithm {
     print(decryptedString);
   }
 
-  Uint8List _generateKey(Uint8List salt, Uint8List passphrase) {
-    final set = Settings();
-    var derivator = KeyDerivator(set.settings["pbkdf2Name"]);
-    var params = Pbkdf2Parameters(salt, set.settings["pbkdf2Iterations"],
-        set.settings["algorithmKeySize"] ~/ 8);
+  static Uint8List _generateKey(Uint8List salt, Uint8List passphrase) {
+    var derivator = KeyDerivator(Settings.settings["pbkdf2Name"]);
+    var params = Pbkdf2Parameters(salt, Settings.settings["pbkdf2Iterations"],
+        Settings.settings["algorithmKeySize"] ~/ 8);
     derivator.init(params);
     return derivator.process(passphrase);
   }
 
-  String hashKey(String key) {
+  static String hashKey(String key) {
     // Convert the input string to bytes
     Uint8List keyBytes = Uint8List.fromList(utf8.encode(key));
     // Create a SHA-256 hasher
