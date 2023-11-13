@@ -40,6 +40,7 @@ class Settings {
       'algorithmKeySize': 256,
       'pbkdf2Name': 'SHA-256/HMAC/PBKDF2',
       'pbkdf2Iterations': 32767,
+      'generatedPasswordLength': 24,
       'salt': saltStr,
       'masterKey': "",
     };

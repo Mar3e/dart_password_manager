@@ -1,11 +1,17 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:args/command_runner.dart';
 import 'package:dart_password_manager/aes_algorithm.dart';
 import 'package:dart_password_manager/settings.dart';
 
 class SetCommand extends Command {
+  SetCommand() {
+    argParser.addFlag("generate",
+        abbr: "g", negatable: false, help: "generate a password for the user.");
+  }
+
   Map<String, dynamic> passwordDetails = {};
   @override
   String get name => "set";
@@ -75,22 +81,29 @@ class SetCommand extends Command {
   }
 
   void getThePassword() {
-    stdout.write("Please enter the password: ");
-    final passWord = stdin.readLineSync();
-    if (passWord == null || passWord.isEmpty) {
-      stdout.writeln("You did not enter anything!!");
-      exit(2);
-    }
-    stdout.write("Please re enter the password: ");
-    final rePassWord = stdin.readLineSync();
-    if (rePassWord == null || rePassWord.isEmpty) {
-      stdout.writeln("You did not enter anything!!");
-      exit(2);
-    } else if (passWord != rePassWord) {
-      stdout.writeln("The password did not match!!");
-      exit(2);
+    if (argResults?["generate"] ?? false) {
+      String generatedPassword = generatePassWord();
+      passwordDetails["passWord"] = generatedPassword;
+      stdout.writeln(
+          "Your generated password is: \x1B[33m$generatedPassword\x1b[0m");
     } else {
-      passwordDetails["passWord"] = passWord;
+      stdout.write("Please enter the password: ");
+      final passWord = stdin.readLineSync();
+      if (passWord == null || passWord.isEmpty) {
+        stdout.writeln("You did not enter anything!!");
+        exit(2);
+      }
+      stdout.write("Please re enter the password: ");
+      final rePassWord = stdin.readLineSync();
+      if (rePassWord == null || rePassWord.isEmpty) {
+        stdout.writeln("You did not enter anything!!");
+        exit(2);
+      } else if (passWord != rePassWord) {
+        stdout.writeln("The password did not match!!");
+        exit(2);
+      } else {
+        passwordDetails["passWord"] = passWord;
+      }
     }
   }
 
@@ -114,5 +127,22 @@ class SetCommand extends Command {
         masterPassWord: masterKey,
         passwordFileName: passwordName,
         passwordFileDetails: passwordDetails);
+  }
+
+  String generatePassWord() {
+    const chars =
+        'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#\$%^&*()-_=+[{]}\\|;:\'",<.>/?';
+    Random rnd = Random.secure();
+
+    String generatedPassword = String.fromCharCodes(
+      Iterable.generate(
+        Settings.settings["generatedPasswordLength"],
+        (_) => chars.codeUnitAt(
+          rnd.nextInt(chars.length),
+        ),
+      ),
+    );
+
+    return generatedPassword;
   }
 }
