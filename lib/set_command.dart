@@ -3,7 +3,7 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:args/command_runner.dart';
-import 'package:dart_password_manager/aes_algorithm.dart';
+import 'package:dart_password_manager/cryptography.dart';
 import 'package:dart_password_manager/settings.dart';
 
 class SetCommand extends Command {
@@ -36,7 +36,7 @@ class SetCommand extends Command {
     stdout.write("Please enter your master key: ");
     String? masterKey = stdin.readLineSync();
     if (masterKey != null && masterKey.isNotEmpty) {
-      String hashedMasterKey = AesAlgorithm.hashKey(masterKey);
+      String hashedMasterKey = Cryptography.hashString(masterKey);
       checkMasterKey(hashedMasterKey);
       return masterKey;
     } else {
@@ -123,10 +123,10 @@ class SetCommand extends Command {
     required String passwordName,
     required Map<String, dynamic> passwordDetails,
   }) {
-    AesAlgorithm.encrypt(
+    Cryptography.encrypt(
         masterPassWord: masterKey,
-        passwordFileName: passwordName,
-        passwordFileDetails: passwordDetails);
+        passwordName: passwordName,
+        passwordDetails: passwordDetails);
   }
 
   String generatePassWord() {

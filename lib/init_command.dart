@@ -1,10 +1,8 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:args/command_runner.dart';
-import 'package:dart_password_manager/aes_algorithm.dart';
+import 'package:dart_password_manager/cryptography.dart';
 import 'package:dart_password_manager/file_manager.dart';
 import 'package:dart_password_manager/settings.dart';
 
@@ -55,7 +53,7 @@ class InitCommand extends Command {
   }
 
   void setMasterKey(String masterKey) {
-    String hashedMasterKey = AesAlgorithm.hashKey(masterKey);
+    String hashedMasterKey = Cryptography.hashString(masterKey);
     Settings.addToSettings("masterKey", hashedMasterKey);
   }
 }
