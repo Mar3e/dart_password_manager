@@ -21,7 +21,7 @@ class InitCommand extends Command {
   void initDPassMan() async {
     Directory appDirectory = FileManager.createDir(".dpassman");
     File? settingsFile = FileManager.findFile(".settings.json");
-    String StoredMasterKey = Settings.settings["masterKey"];
+    String storedMasterKey = Settings.settings["masterKey"];
 
     if (!appDirectory.existsSync()) {
       final masterKey = askForMasterKey();
@@ -33,7 +33,7 @@ class InitCommand extends Command {
       final masterKey = askForMasterKey();
       Settings.createSettingsFile();
       setMasterKey(masterKey);
-    } else if (StoredMasterKey.isEmpty) {
+    } else if (storedMasterKey.isEmpty) {
       final masterKey = askForMasterKey();
       setMasterKey(masterKey);
     } else {
