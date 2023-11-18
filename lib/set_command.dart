@@ -3,8 +3,8 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:args/command_runner.dart';
-import 'package:dart_password_manager/cryptography.dart';
-import 'package:dart_password_manager/settings.dart';
+import 'package:dart_password_manager/utils/cryptography.dart';
+import 'package:dart_password_manager/utils/settings.dart';
 
 class SetCommand extends Command {
   SetCommand() {

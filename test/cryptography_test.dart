@@ -1,5 +1,5 @@
-import 'package:dart_password_manager/cryptography.dart';
-import 'package:dart_password_manager/file_manager.dart';
+import 'package:dart_password_manager/utils/cryptography.dart';
+import 'package:dart_password_manager/utils/file_management.dart';
 import 'package:test/test.dart';
 
 void main() {

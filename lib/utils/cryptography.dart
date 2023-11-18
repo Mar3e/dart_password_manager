@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:aes_crypt_null_safe/aes_crypt_null_safe.dart';
-import 'package:dart_password_manager/file_manager.dart';
-import 'package:dart_password_manager/settings.dart';
+import 'package:dart_password_manager/utils/file_management.dart';
+import 'package:dart_password_manager/utils/settings.dart';
 import 'package:pointycastle/pointycastle.dart';
 
 class Cryptography {

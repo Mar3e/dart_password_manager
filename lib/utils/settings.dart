@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:dart_password_manager/file_manager.dart';
+import 'package:dart_password_manager/utils/file_management.dart';
 
 class Settings {
   static Map<String, dynamic> _settings = {};
@@ -25,7 +25,7 @@ class Settings {
   }
 
   static File createSettingsFile() {
-    String settingPath = ".settings.json";
+    String settingPath = ".dpassman/.settings.json";
     final settingFile = FileManager.createFile(settingPath);
     FileManager.writeOnFile(settingFile, writeSettings());
     return settingFile;

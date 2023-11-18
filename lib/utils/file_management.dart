@@ -9,7 +9,7 @@ class FileManager {
   }
 
   static File createFile(String path) {
-    return File("$homePath/.dpassman/$path");
+    return File("$homePath/$path");
   }
 
   static void writeOnFile(File file, String contents) {
