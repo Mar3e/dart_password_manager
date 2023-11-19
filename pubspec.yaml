@@ -10,6 +10,7 @@ environment:
 dependencies:
   aes_crypt_null_safe: ^2.0.2
   args: ^2.4.2
+  path: ^1.8.3
   pointycastle: ^3.7.3
   # path: ^1.8.0
 
