@@ -2,19 +2,13 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:args/command_runner.dart';
+import 'package:dart_password_manager/utils/cli_clip_board.dart';
 import 'package:dart_password_manager/utils/cryptography.dart';
+import 'package:dart_password_manager/utils/file_management.dart';
 import 'package:dart_password_manager/utils/settings.dart';
 
 class GetCommand extends Command {
-  GetCommand() {
-    argParser.addOption(
-      "name",
-      abbr: "n",
-      help: "Specify the name of the password",
-      defaultsTo: "",
-    );
-  }
-
+  GetCommand();
   @override
   String get name => "get";
   @override
@@ -22,18 +16,26 @@ class GetCommand extends Command {
 
   @override
   FutureOr? run() {
-    print(argResults?.name);
-    searchForTheFile(argResults?["name"]);
+    String passWordName = searchForTheFile();
     String masterKey = askForMasterKey();
-    returnThePassword(masterKey);
+    returnThePassword(masterKey, passWordName);
   }
 
-  void searchForTheFile(String? passWordName) {
+  String searchForTheFile() {
+    stdout.write("What password are you looking for? ");
+    final passWordName = stdin.readLineSync();
     if (passWordName == null || passWordName.isEmpty) {
-      stdout.writeln("You didn't specified a password. see dpassman help get");
+      stdout.writeln("You didn't specified a password.");
       exit(2);
     } else {
-      stdout.writeln("WTF $passWordName");
+      final result = FileManager.findFile("$passWordName.txt.aes");
+      if (result == null) {
+        stdout.write(
+            "Couldn't find the password check the spelling or create \"$passWordName\" first");
+        exit(2);
+      } else {
+        return passWordName;
+      }
     }
   }
 
@@ -62,5 +64,10 @@ class GetCommand extends Command {
     }
   }
 
-  void returnThePassword(String masterKey) {}
+  void returnThePassword(String masterKey, String passWordName) {
+    final passwordDetails = Cryptography.decrypt(
+        masterPassWord: masterKey, passWordName: passWordName);
+    stdout.writeln("You password has been copy to the clipboard");
+    Clipboard().write(passwordDetails["passWord"]);
+  }
 }
