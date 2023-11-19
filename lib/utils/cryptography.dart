@@ -20,9 +20,9 @@ class Cryptography {
     try {
       String passwordDetailsStr = json.encode(passwordDetails);
       crypt.encryptTextToFileSync(passwordDetailsStr,
-          "${FileManager.homePath}/.dpassman/$passwordName.txt.aes");
+          "${FileManager.homePath}/.dpassman/$passwordName.json.aes");
     } on AesCryptException {
-      throw Exception("The password is already exists");
+      throw Exception("The password already exists");
     }
   }
 
@@ -35,7 +35,7 @@ class Cryptography {
     final crypt = AesCrypt(keyAsString);
 
     final decryptedString = crypt.decryptTextFromFileSync(
-        "${FileManager.homePath}/.dpassman/$passWordName.txt.aes");
+        "${FileManager.homePath}/.dpassman/$passWordName.json.aes");
 
     Map<String, dynamic> decryptedMap = json.decode(decryptedString);
 

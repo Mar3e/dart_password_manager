@@ -49,7 +49,7 @@ class GetCommand extends Command {
       stdout.writeln("You didn't specified a password.");
       exit(2);
     } else {
-      final result = FileManager.findFile("$passWordName.txt.aes");
+      final result = FileManager.findFile("$passWordName.json.aes");
       if (result == null) {
         stdout.write(
             "Couldn't find the password check the spelling or create \"$passWordName\" first");

@@ -88,13 +88,13 @@ class SetCommand extends Command {
           "Your generated password is: \x1B[33m$generatedPassword\x1b[0m");
     } else {
       stdout.write("Please enter the password: ");
-      final passWord = stdin.readLineSync();
+      final passWord = stdin.readLineSync()?.trim();
       if (passWord == null || passWord.isEmpty) {
         stdout.writeln("You did not enter anything!!");
         exit(2);
       }
       stdout.write("Please re enter the password: ");
-      final rePassWord = stdin.readLineSync();
+      final rePassWord = stdin.readLineSync()?.trim();
       if (rePassWord == null || rePassWord.isEmpty) {
         stdout.writeln("You did not enter anything!!");
         exit(2);
@@ -123,10 +123,14 @@ class SetCommand extends Command {
     required String passwordName,
     required Map<String, dynamic> passwordDetails,
   }) {
-    Cryptography.encrypt(
-        masterPassWord: masterKey,
-        passwordName: passwordName,
-        passwordDetails: passwordDetails);
+    try {
+      Cryptography.encrypt(
+          masterPassWord: masterKey,
+          passwordName: passwordName,
+          passwordDetails: passwordDetails);
+    } catch (e) {
+      stdout.write(e);
+    }
   }
 
   String generatePassWord() {
