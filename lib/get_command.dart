@@ -8,11 +8,32 @@ import 'package:dart_password_manager/utils/file_management.dart';
 import 'package:dart_password_manager/utils/settings.dart';
 
 class GetCommand extends Command {
-  GetCommand();
+  GetCommand() {
+    argParser.addFlag(
+      "details",
+      abbr: "d",
+      help: "Show the details of the password",
+      negatable: false,
+      defaultsTo: false,
+    );
+    argParser.addFlag(
+      "showPassword",
+      abbr: "s",
+      help: "Show the password in the console",
+      negatable: false,
+      defaultsTo: false,
+    );
+    argParser.addFlag(
+      "DoNotCopy",
+      abbr: "n",
+      help: "Do not copy the password to the clipboard",
+      negatable: false,
+    );
+  }
   @override
   String get name => "get";
   @override
-  String get description => "Retrieve a password form dpassman";
+  String get description => "retrieve a password from dpassman";
 
   @override
   FutureOr? run() {
@@ -67,7 +88,18 @@ class GetCommand extends Command {
   void returnThePassword(String masterKey, String passWordName) {
     final passwordDetails = Cryptography.decrypt(
         masterPassWord: masterKey, passWordName: passWordName);
-    stdout.writeln("You password has been copy to the clipboard");
-    Clipboard().write(passwordDetails["passWord"]);
+    if (argResults?["details"]) {
+      stdout.writeln("Password Details of $passWordName: ");
+      stdout.writeln("UserName: ${passwordDetails["passWordUserName"]}");
+      stdout.writeln("Url: ${passwordDetails["passWordUrl"]}");
+      stdout.writeln("Description: ${passwordDetails["passWordDescription"]}");
+      if (argResults?["showPassword"]) {
+        stdout.writeln("PassWord: ${passwordDetails["passWord"]}");
+      }
+    }
+    if (!argResults?["DoNotCopy"]) {
+      stdout.writeln("You password has been copy to the clipboard");
+      Clipboard().write(passwordDetails["passWord"]);
+    }
   }
 }

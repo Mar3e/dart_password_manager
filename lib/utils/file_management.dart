@@ -41,4 +41,16 @@ class FileManager {
     String fileContent = file.readAsStringSync();
     return fileContent;
   }
+
+  static void showAllFiles() {
+    Directory directory = Directory("$homePath/.dpassman");
+    List<FileSystemEntity> files = directory.listSync(recursive: true);
+    for (final file in files) {
+      final fileName = file.path.split('/').last;
+      final fileNameWithoutExtension = fileName.split('.').first;
+      if (!fileName.startsWith('.')) {
+        print(fileNameWithoutExtension);
+      }
+    }
+  }
 }
