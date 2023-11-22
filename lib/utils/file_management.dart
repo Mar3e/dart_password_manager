@@ -42,15 +42,30 @@ class FileManager {
     return fileContent;
   }
 
+  static void deleteFile(String filePath) {
+    File file = File("$homePath/.dpassman/$filePath");
+
+    if (file.existsSync()) {
+      file.deleteSync();
+      stdout.writeln('\nPassword deleted successfully.');
+    } else {
+      stdout.writeln('Password not found.');
+    }
+  }
+
   static void showAllFiles() {
     Directory directory = Directory("$homePath/.dpassman");
     List<FileSystemEntity> files = directory.listSync(recursive: true);
-    for (final file in files) {
-      final fileName = file.path.split('/').last;
-      final fileNameWithoutExtension = fileName.split('.').first;
-      if (!fileName.startsWith('.')) {
-        print(fileNameWithoutExtension);
+    if (files.isNotEmpty) {
+      for (final file in files) {
+        final fileName = file.path.split('/').last;
+        final fileNameWithoutExtension = fileName.split('.').first;
+        if (!fileName.startsWith('.')) {
+          stdout.writeln(fileNameWithoutExtension);
+        }
       }
+    } else {
+      stdout.write("You did not set any passwords yet!!");
     }
   }
 }
