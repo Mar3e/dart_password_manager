@@ -34,13 +34,15 @@ class SetCommand extends Command {
 
   String askForMasterKey() {
     stdout.write("Please enter your master key: ");
+    stdin.echoMode = false;
     String? masterKey = stdin.readLineSync();
+    stdin.echoMode = true;
     if (masterKey != null && masterKey.isNotEmpty) {
       String hashedMasterKey = Cryptography.hashString(masterKey);
       checkMasterKey(hashedMasterKey);
       return masterKey;
     } else {
-      stdout.write("Please enter something!!");
+      stdout.writeln("\nPlease enter something!!");
       exit(2);
     }
   }
@@ -48,20 +50,20 @@ class SetCommand extends Command {
   void checkMasterKey(String hashedMasterKey) {
     String storedHMK = Settings.settings["masterKey"];
     if (storedHMK.isEmpty) {
-      stdout.writeln("You did not initiated dpassman see (dpassman help)");
+      stdout.write("\nYou did not initiated dpassman see (dpassman help)");
       exit(2);
     }
     if (storedHMK != hashedMasterKey) {
-      stdout.write("Wrong master key");
+      stdout.writeln("\nWrong master key");
       exit(2);
     }
   }
 
   String getPasswordName() {
-    stdout.write("Please enter the name of the password: ");
+    stdout.write("\nPlease enter the name of the password: ");
     final passWordName = stdin.readLineSync();
     if (passWordName == null || passWordName.isEmpty) {
-      stdout.writeln("You did not enter anything!!");
+      stdout.writeln("\nYou did not enter anything!!");
       exit(2);
     } else {
       return passWordName;
@@ -70,10 +72,10 @@ class SetCommand extends Command {
 
   void getPasswordUserName() {
     stdout.write(
-        "Please enter the userName or Email associated with the password: ");
+        "\nPlease enter the userName or Email associated with the password: ");
     final passWordUserName = stdin.readLineSync();
     if (passWordUserName == null || passWordUserName.isEmpty) {
-      stdout.writeln("You did not enter anything!!");
+      stdout.writeln("\nYou did not enter anything!!");
       exit(2);
     } else {
       passwordDetails["passWordUserName"] = passWordUserName;
@@ -85,21 +87,24 @@ class SetCommand extends Command {
       String generatedPassword = generatePassWord();
       passwordDetails["passWord"] = generatedPassword;
       stdout.writeln(
-          "Your generated password is: \x1B[33m$generatedPassword\x1b[0m");
+          "\nYour generated password is: \x1B[33m$generatedPassword\x1b[0m");
     } else {
-      stdout.write("Please enter the password: ");
+      stdout.write("\nPlease enter the password: ");
+      stdin.echoMode = false;
       final passWord = stdin.readLineSync()?.trim();
+
       if (passWord == null || passWord.isEmpty) {
-        stdout.writeln("You did not enter anything!!");
+        stdout.writeln("\nYou did not enter anything!!");
         exit(2);
       }
-      stdout.write("Please re enter the password: ");
+      stdout.write("\nPlease re enter the password: ");
       final rePassWord = stdin.readLineSync()?.trim();
+      stdin.echoMode = true;
       if (rePassWord == null || rePassWord.isEmpty) {
-        stdout.writeln("You did not enter anything!!");
+        stdout.writeln("\nYou did not enter anything!!");
         exit(2);
       } else if (passWord != rePassWord) {
-        stdout.writeln("The password did not match!!");
+        stdout.writeln("\nThe password did not match!!");
         exit(2);
       } else {
         passwordDetails["passWord"] = passWord;
@@ -108,12 +113,12 @@ class SetCommand extends Command {
   }
 
   void getExtraDetails() {
-    stdout
-        .write("Please enter the URL associated with the password(Optional): ");
+    stdout.write(
+        "\nPlease enter the URL associated with the password(Optional): ");
     final passWordUrl = stdin.readLineSync();
     passwordDetails["passWordUrl"] = passWordUrl ?? "";
 
-    stdout.write("Please enter the discretion of password(Optional): ");
+    stdout.write("\nPlease enter the discretion of password(Optional): ");
     final passWordDescription = stdin.readLineSync();
     passwordDetails["passWordDescription"] = passWordDescription ?? "";
   }
@@ -129,7 +134,7 @@ class SetCommand extends Command {
           passwordName: passwordName,
           passwordDetails: passwordDetails);
     } catch (e) {
-      stdout.write(e);
+      stdout.writeln(e);
     }
   }
 

@@ -62,7 +62,9 @@ class GetCommand extends Command {
 
   String askForMasterKey() {
     stdout.write("Please enter your master key: ");
+    stdin.echoMode = false;
     String? masterKey = stdin.readLineSync();
+    stdin.echoMode = true;
     if (masterKey != null && masterKey.isNotEmpty) {
       String hashedMasterKey = Cryptography.hashString(masterKey);
       checkMasterKey(hashedMasterKey);
