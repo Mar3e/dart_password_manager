@@ -56,7 +56,7 @@ class FileManager {
   static void showAllFiles() {
     Directory directory = Directory("$homePath/.dpassman");
     List<FileSystemEntity> files = directory.listSync(recursive: true);
-    if (files.isNotEmpty) {
+    if (files.length > 1) {
       for (final file in files) {
         final fileName = file.path.split('/').last;
         final fileNameWithoutExtension = fileName.split('.').first;

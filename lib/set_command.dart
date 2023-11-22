@@ -72,7 +72,7 @@ class SetCommand extends Command {
 
   void getPasswordUserName() {
     stdout.write(
-        "\nPlease enter the userName or Email associated with the password: ");
+        "Please enter the userName or Email associated with the password: ");
     final passWordUserName = stdin.readLineSync();
     if (passWordUserName == null || passWordUserName.isEmpty) {
       stdout.writeln("\nYou did not enter anything!!");
@@ -87,9 +87,9 @@ class SetCommand extends Command {
       String generatedPassword = generatePassWord();
       passwordDetails["passWord"] = generatedPassword;
       stdout.writeln(
-          "\nYour generated password is: \x1B[33m$generatedPassword\x1b[0m");
+          "Your generated password is: \x1B[33m$generatedPassword\x1b[0m");
     } else {
-      stdout.write("\nPlease enter the password: ");
+      stdout.write("Please enter the password: ");
       stdin.echoMode = false;
       final passWord = stdin.readLineSync()?.trim();
 
@@ -118,7 +118,7 @@ class SetCommand extends Command {
     final passWordUrl = stdin.readLineSync();
     passwordDetails["passWordUrl"] = passWordUrl ?? "";
 
-    stdout.write("\nPlease enter the discretion of password(Optional): ");
+    stdout.write("Please enter the discretion of password(Optional): ");
     final passWordDescription = stdin.readLineSync();
     passwordDetails["passWordDescription"] = passWordDescription ?? "";
   }

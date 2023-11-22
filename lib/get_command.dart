@@ -61,7 +61,7 @@ class GetCommand extends Command {
   }
 
   String askForMasterKey() {
-    stdout.write("Please enter your master key: ");
+    stdout.writeln("Please enter your master key: ");
     stdin.echoMode = false;
     String? masterKey = stdin.readLineSync();
     stdin.echoMode = true;
@@ -95,9 +95,9 @@ class GetCommand extends Command {
       stdout.writeln("UserName: ${passwordDetails["passWordUserName"]}");
       stdout.writeln("Url: ${passwordDetails["passWordUrl"]}");
       stdout.writeln("Description: ${passwordDetails["passWordDescription"]}");
-      if (argResults?["showPassword"]) {
-        stdout.writeln("PassWord: ${passwordDetails["passWord"]}");
-      }
+    }
+    if (argResults?["showPassword"]) {
+      stdout.writeln("PassWord: \x1B[33m${passwordDetails["passWord"]}\x1B[0m");
     }
     if (!argResults?["DoNotCopy"]) {
       stdout.writeln("You password has been copy to the clipboard");
