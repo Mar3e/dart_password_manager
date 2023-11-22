@@ -1,6 +1,6 @@
 # dart password manager (dpassman)
 This project is a simple CLI password manager made in pure dart with few dart packages.
-# Disclaimer:
+# Disclaimer
 **This project is intended solely for educational purposes to understand how password managers work. It is not intended to be used as a secure solution to save or manage your passwords. It is strongly recommended that you use trusted password managers that are endorsed and recommended by the security community for securely storing your passwords.**
 
 Please be aware that the implementation in this project may not follow industry best practices or provide the necessary level of security required for real-world use. It is essential to prioritize the security of your sensitive information and rely on established, reputable password managers that have undergone rigorous security audits and are regularly updated to address emerging threats.
